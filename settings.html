@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kioks Kamonji - Native</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  </head>
+
+  <body class="text-gray-900">
+    <main class="h-dvh w-screen flex flex-col items-center justify-center">
+      <!-- Alert container -->
+      <div id="alertContainer" class="mt-4"></div>
+
+      <!-- Section 1: Server / Print settings -->
+      <section class="w-full max-w-md p-6 bg-white rounded-lg shadow-md mb-6">
+        <h2 class="text-lg font-semibold mb-4">Server / Print Settings</h2>
+
+        <form id="formServer" class="flex flex-col gap-y-4">
+          <div>
+            <label
+              for="ip_server"
+              class="block mb-2 text-sm font-bold text-gray-900"
+              >IP or URL</label
+            >
+            <input
+              type="text"
+              id="ip_server"
+              name="ip_server"
+              placeholder="e.g. 192.168.1.50 or http://printer.local"
+              class="text-center bg-gray-50 border border-gray-300 text-gray-900 text-md tracking-wide font-mono rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+            />
+          </div>
+
+          <div class="flex gap-2">
+            <button
+              id="saveServer"
+              type="submit"
+              class="flex-1 text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-4 py-2"
+            >
+              Simpan
+            </button>
+            <!-- <button
+              id="testPrint"
+              type="button"
+              class="flex-1 text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-4 focus:ring-green-300 font-medium rounded-full text-sm px-4 py-2"
+            >
+              Test Print
+            </button> -->
+          </div>
+        </form>
+      </section>
+
+      <!-- Section 2: Account settings -->
+      <section class="w-full max-w-md p-6 bg-white rounded-lg shadow-md">
+        <h2 class="text-lg font-semibold mb-4">
+          Account (username & password)
+        </h2>
+
+        <form id="formAccount" class="flex flex-col gap-y-4">
+          <div>
+            <label
+              for="acct_username"
+              class="block mb-2 text-sm font-bold text-gray-900"
+              >Username</label
+            >
+            <input
+              type="text"
+              id="acct_username"
+              name="acct_username"
+              class="text-center bg-gray-50 border border-gray-300 text-gray-900 text-md tracking-wide font-mono rounded-lg block w-full p-2.5"
+            />
+          </div>
+          <div>
+            <label
+              for="acct_password"
+              class="block mb-2 text-sm font-bold text-gray-900"
+              >Password</label
+            >
+            <input
+              type="password"
+              id="acct_password"
+              name="acct_password"
+              class="text-center bg-gray-50 border border-gray-300 text-gray-900 text-md tracking-wide font-mono rounded-lg block w-full p-2.5"
+            />
+          </div>
+
+          <div class="flex gap-2 items-center">
+            <a
+              href="./index.html"
+              id="backHome"
+              class="text-white bg-gray-700 hover:bg-gray-800 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-full text-sm px-4 py-2"
+              >Kembali</a
+            >
+            <button
+              id="saveAccount"
+              type="submit"
+              class="flex-1 text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-4 py-2"
+            >
+              Simpan Akun
+            </button>
+          </div>
+        </form>
+      </section>
+    </main>
+
+    <script>
+      // Elements
+      const formServer = document.getElementById("formServer");
+      const ipInput = document.getElementById("ip_server");
+      const testPrintBtn = document.getElementById("testPrint");
+      const formAccount = document.getElementById("formAccount");
+      const acctUser = document.getElementById("acct_username");
+      const acctPass = document.getElementById("acct_password");
+
+      // Load saved values on page load
+      window.addEventListener("load", () => {
+        const savedIp = localStorage.getItem("ip_server") || "";
+        const savedUser = localStorage.getItem("acct_username") || "";
+        const savedPass = localStorage.getItem("acct_password") || "";
+
+        if (ipInput) ipInput.value = savedIp;
+        if (acctUser) acctUser.value = savedUser;
+        if (acctPass) acctPass.value = savedPass;
+      });
+
+      // Save server settings
+      if (formServer) {
+        formServer.addEventListener("submit", (e) => {
+          e.preventDefault();
+          const value = ipInput.value.trim();
+          localStorage.setItem("ip_server", value);
+          alert("Pengaturan server disimpan.");
+        });
+      }
+
+      // Test Print button: construct URL and open in new tab
+      if (testPrintBtn) {
+        testPrintBtn.addEventListener("click", () => {
+          const ip = (ipInput && ipInput.value.trim()) || "";
+          if (!ip) {
+            alert("Masukkan IP atau URL server terlebih dahulu.");
+            return;
+          }
+
+          // If user didn't provide protocol, assume http
+          const hasProtocol = /^https?:\/\//i.test(ip);
+          const base = hasProtocol
+            ? ip.replace(/\/*$/, "")
+            : "http://" + ip.replace(/\/*$/, "");
+          const printUrl = base + "/api/print-struk";
+
+          // Offer to open the URL in a new tab/window
+          const open = confirm("Open print URL in a new tab?\n" + printUrl);
+          if (open) {
+            window.open(printUrl, "_blank", "noopener");
+          }
+        });
+      }
+
+      // Save account settings
+      if (formAccount) {
+        formAccount.addEventListener("submit", (e) => {
+          e.preventDefault();
+          const user = acctUser.value.trim();
+          const pass = acctPass.value;
+          localStorage.setItem("acct_username", user);
+          localStorage.setItem("acct_password", pass);
+          alert("Akun disimpan.");
+        });
+      }
+    </script>
+  </body>
+</html>
