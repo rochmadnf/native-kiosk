@@ -2,7 +2,7 @@
     "url": [
         {
             "name": "login",
-            "value": "https://api.medikaconnect.com/v1/auth/login/",
+            "value": "https://api.medikaconnect.site/v1/auth/login/",
             "method": "POST"
         }
     ]
