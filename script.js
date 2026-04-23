@@ -6,6 +6,8 @@ import {
   getAntrean,
   hitungUsia,
   settings,
+  getVisitorList,
+  forwardToPoli
 } from "./lib/hit-api.js";
 const API_BASE = `${location.protocol}//${location.host}`;
 
@@ -116,6 +118,13 @@ formNik.addEventListener("submit", async (e) => {
                             </div>
 
                             <div class="w-full grid grid-cols-6 gap-x-4">
+                              <div class="col-span-2 font-medium">No.BPJS</div>
+                              <div class="col-span-4 font-bold">${
+                                detail.no_kartu_jaminan
+                              }</div>
+                            </div>
+
+                            <div class="w-full grid grid-cols-6 gap-x-4">
                               <div class="col-span-2 font-medium">Usia/Umur</div>
                               <div class="col-span-4 font-bold">${hitungUsia(
                                 detail.tgl_lahir
@@ -185,9 +194,33 @@ formNik.addEventListener("submit", async (e) => {
                   body: JSON.stringify(result),
                 }
               ).then((res) => res.json());
-              // console.log(afterNumber);
+              console.log(afterNumber);
               if (afterNumber.status == 200) {
-                window.location.href = baseUrl;
+              
+                // Teruskan langsung ke POLI
+                let visitorList = await getVisitorList();
+                let currVisit = visitorList.find(nu => nu.nik === detail.nik);
+                let cMsg = null;
+
+                const fwPoli = await forwardToPoli(currVisit.id_kunjungan, currVisit.poliklinik_id);
+
+                if(fwPoli === undefined || !fwPoli.status){
+                  visitorList = await getVisitorList("Menunggu", 75);
+                  currVisit = visitorList.find(nu => nu.nik === detail.nik);
+                  cMsg = 'Antrean telah dikirim ke Poli.'
+                }
+
+                Swal.fire({
+                  title: 'Terbaik Komiu Lee..',
+                  text: cMsg != null ? cMsg : fwPoli.message,
+                  icon: 'success',
+                  confirmButtonText: 'Nacanggih!!'
+                }).then((result) => {
+                  if (result.isConfirmed) {
+                    window.location.href = baseUrl;
+                  }
+                });
+
               }
             } else {
               alertContainer.innerHTML = `
