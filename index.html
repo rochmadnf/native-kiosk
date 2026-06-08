@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -6,142 +6,120 @@
     <title>Kioks Kamonji - Native</title>
     <link rel="icon" href="https://rochmadnf.my.id/assets/images/favicon.png" />
 
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-  </head>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap"
+      rel="stylesheet"
+    />
 
-  <body class="text-gray-900 relative">
-    <div
-      class="absolute top-8 right-8 size-8 rounded-full bg-green-500 inline-flex items-center justify-center"
-    >
-      <a href="./settings.html">⚙️</a>
-    </div>
-    <div class="absolute z-10 top-4 left-4">
-      <div class="flex items-center gap-2 text-sm">
-        <span id="prefix" class="text-gray-900"></span>
-        <a
-          id="creditLink"
-          class="text-blue-500 font-medium"
-          href="https://instagram.com/rochmadnf"
-          target="_blank"
-          rel="noopener noreferrer"
-          ><span id="handle" class="text-blue-500 font-medium"></span
-        ></a>
-        <span id="mid" class="text-gray-900"></span>
-        <strong id="org" class="text-gray-900"></strong>
-        <span id="cursor" class="text-gray-900">|</span>
-      </div>
-    </div>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+    />
 
-    <!-- Minimal caret blink and typing styles -->
-    <style>
-      #cursor {
-        animation: blink 1s steps(2, start) infinite;
-      }
-      @keyframes blink {
-        50% {
-          opacity: 0;
-        }
+    <link href="/assets/css/phosphor.css" rel="stylesheet" type="text/css" />
+
+    <script src="/assets/js/tailwindcss.js"></script>
+    <style type="text/tailwindcss">
+      @theme {
+        --font-sans:
+          "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif,
+          "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
+          "Noto Color Emoji";
+        --font-mono:
+          "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco,
+          Consolas, "Liberation Mono", "Courier New", monospace;
+        --color-brand-old: var(--color-green-700);
+        --color-brand-border: --alpha(var(--color-green-300)/50%);
+        --color-brand-bg: var(--color-green-100);
       }
     </style>
-    <main class="h-dvh w-screen flex flex-col items-center justify-center">
-      <!-- Alert container -->
-      <div id="alertContainer" class="mt-4"></div>
+  </head>
 
-      <!-- Form Input NIK -->
-      <form id="formNik">
-        <div class="grid gap-6 mb-6">
-          <div class="w-fit flex flex-row items-center gap-2">
-            <div>
-              <label
-                for="nik"
-                class="block mb-2 text-sm font-bold text-gray-900"
-                >NIK</label
-              >
+  <body class="text-slate-900 antiliased">
+    <main
+      class="overflow-x-hidden mx-auto my-8 border border-brand-border space-y-8 rounded-md lg:max-w-4xl px-8 pt-8 pb-4 shadow-xs"
+    >
+      <!-- header -->
+      <header
+        id="myHeader"
+        class="flex items-center justify-between border border-brand-border rounded-md py-4 px-6 shadow-xs"
+      >
+        <section aria-label="Logo" class="flex items-center gap-x-2">
+          <div
+            class="inline-flex rounded-md bg-brand-bg items-center justify-center size-12"
+          >
+            <i
+              class="ph ph-hospital text-brand-old text-3xl pointer-events-none"
+            ></i>
+          </div>
+
+          <div class="-space-y-0.5">
+            <h1 class="text-base font-bold text-brand-old">
+              UPTD. Puskesmas Kamonji
+            </h1>
+            <p class="text-xs text-green-600">Kiosk Pendaftaran Pasien</p>
+          </div>
+        </section>
+        <button
+          id="btnSetting"
+          class="inline-flex items-center p-2 rounded-md border border-green-500/75 cursor-pointer transition duration-200 hover:bg-brand-bg/75"
+        >
+          <i class="ph ph-gear text-brand-old text-lg pointer-events-none"></i>
+        </button>
+      </header>
+
+      <section
+        id="nikContent"
+        aria-label="NIK Content"
+        class="flex flex-col gap-y-4 border border-brand-border rounded-md py-4 px-6 shadow-xs animate__animated"
+      >
+        <h2 class="font-semibold text-brand-old text-[13px]">Data Pasien</h2>
+        <form class="space-y-4" id="patientForm">
+          <div>
+            <label for="nik" class="text-xs text-green-900 font-semibold"
+              >NIK / No. BPJS</label
+            >
+            <div
+              class="relative mt-2 group/search-nik w-full flex items-center"
+            >
               <input
-                maxlength="16"
+                class="inline-flex w-full h-18 text-4xl text-green-900 font-mono tracking-wider rounded-md py-2 px-4 outline-none border border-brand-border focus:ring-2 focus:ring-green-300 focus:ring-offset-2 placeholder:text-green-900/30"
                 type="text"
                 id="nik"
+                autofocus
+                placeholder="7271022...."
                 name="nik"
                 required
-                autofocus
-                class="text-center bg-gray-50 border border-gray-300 text-gray-900 text-xl tracking-widest font-mono rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                minlength="10"
+                maxlength="16"
               />
+              <button
+                type="submit"
+                class="absolute right-5 text-green-900/30 cursor-pointer group-hover/search-nik:text-green-900 group-focus-within/search-nik:text-green-900 transition duration-200"
+              >
+                <i
+                  class="ph ph-magnifying-glass pointer-events-none text-[30px]"
+                ></i>
+              </button>
             </div>
-            <button
-              id="submitBtn"
-              type="submit"
-              class="self-end text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2"
-            >
-              Cek
-            </button>
           </div>
-        </div>
-      </form>
+        </form>
+      </section>
 
-      <!-- List Layanan -->
-      <div
-        id="layananList"
-        class="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
-      ></div>
-
-      <!-- Typing effect for top-right credit (prefix, handle link, organization) -->
-      <script>
-        (function () {
-          const prefixEl = document.getElementById("prefix");
-          const handleEl = document.getElementById("handle");
-          const midEl = document.getElementById("mid");
-          const orgEl = document.getElementById("org");
-          if (!prefixEl || !handleEl || !midEl || !orgEl) return;
-
-          const segments = [
-            { el: prefixEl, text: "Made with ❤️ by " },
-            { el: handleEl, text: "@rochmadnf" },
-            { el: midEl, text: " at " },
-            { el: orgEl, text: "UPTD. Puskesmas Kamonji" },
-          ];
-
-          const speed = 80; // ms per character
-          const pauseBetweenSegments = 300; // ms
-          const endPause = 10000; // pause after full message
-
-          function typeSegment(index) {
-            const seg = segments[index];
-            let k = 0;
-            function step() {
-              if (k <= seg.text.length) {
-                seg.el.textContent = seg.text.slice(0, k);
-                k++;
-                setTimeout(step, speed);
-              } else {
-                // move to next segment or finish
-                if (index + 1 < segments.length) {
-                  setTimeout(
-                    () => typeSegment(index + 1),
-                    pauseBetweenSegments
-                  );
-                } else {
-                  // finished full message: pause then clear and restart
-                  setTimeout(() => {
-                    segments.forEach((s) => (s.el.textContent = ""));
-                    setTimeout(() => typeSegment(0), 500);
-                  }, endPause);
-                }
-              }
-            }
-            step();
-          }
-
-          if (document.readyState === "loading") {
-            document.addEventListener("DOMContentLoaded", () => typeSegment(0));
-          } else {
-            typeSegment(0);
-          }
-        })();
-      </script>
-
-
-      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-      <script src="./script.js" type="module"></script>
+      <!-- footer -->
+      <p class="text-xs text-slate-600 text-center">
+        Made with ❤️ by
+        <a
+          href="https://instagram.com/rochmadnf"
+          target="_blank"
+          class="text-brand-old hover:underline"
+          >Rochmad Nurul Fahmi</a
+        >
+      </p>
     </main>
+
+    <script src="/lib/app.js" type="module"></script>
   </body>
 </html>
