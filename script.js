@@ -7,7 +7,7 @@ import {
   hitungUsia,
   settings,
   getVisitorList,
-  forwardToPoli
+  forwardToPoli,
 } from "./lib/hit-api.js";
 const API_BASE = `${location.protocol}//${location.host}`;
 
@@ -127,7 +127,7 @@ formNik.addEventListener("submit", async (e) => {
                             <div class="w-full grid grid-cols-6 gap-x-4">
                               <div class="col-span-2 font-medium">Usia/Umur</div>
                               <div class="col-span-4 font-bold">${hitungUsia(
-                                detail.tgl_lahir
+                                detail.tgl_lahir,
                               )}</div>
                             </div>
                             
@@ -139,7 +139,7 @@ formNik.addEventListener("submit", async (e) => {
       layananList.innerHTML = layanan
         .map((l) => {
           const poli = listPoli.filter(
-            (poli) => l.kode_ruang === poli.kode_poli
+            (poli) => l.kode_ruang === poli.kode_poli,
           )[0];
           return `
                           <div class="layanan-card p-4 bg-white border border-gray-300 rounded-lg shadow hover:bg-blue-50 cursor-pointer transition"
@@ -179,8 +179,9 @@ formNik.addEventListener("submit", async (e) => {
                                               result.data.nomor_antrian ||
                                               "(nomor tidak tersedia)"
                                             }</strong> | PIN: <strong>${
-                result.data.pin || "(pin tidak tersedia)"
-              }</strong>
+                                              result.data.pin ||
+                                              "(pin tidak tersedia)"
+                                            }</strong>
                                         </div>
                                     `;
 
@@ -192,35 +193,26 @@ formNik.addEventListener("submit", async (e) => {
                     "Content-Type": "application/json",
                   },
                   body: JSON.stringify(result),
-                }
+                },
               ).then((res) => res.json());
-              console.log(afterNumber);
+
               if (afterNumber.status == 200) {
-              
                 // Teruskan langsung ke POLI
-                let visitorList = await getVisitorList();
-                let currVisit = visitorList.find(nu => nu.nik === detail.nik);
-                let cMsg = null;
-
-                const fwPoli = await forwardToPoli(currVisit.id_kunjungan, currVisit.poliklinik_id);
-
-                if(fwPoli === undefined || !fwPoli.status){
-                  visitorList = await getVisitorList("Menunggu", 75);
-                  currVisit = visitorList.find(nu => nu.nik === detail.nik);
-                  cMsg = 'Antrean telah dikirim ke Poli.'
-                }
+                const fwPoli = await forwardToPoli(
+                  result.data.id_kunjungan,
+                  id_ruang,
+                );
 
                 Swal.fire({
-                  title: 'Terbaik Komiu Lee..',
-                  text: cMsg != null ? cMsg : fwPoli.message,
-                  icon: 'success',
-                  confirmButtonText: 'Nacanggih!!'
+                  title: "Berhasil!",
+                  text: fwPoli.message,
+                  icon: "success",
+                  confirmButtonText: "Ok",
                 }).then((result) => {
                   if (result.isConfirmed) {
                     window.location.href = baseUrl;
                   }
                 });
-
               }
             } else {
               alertContainer.innerHTML = `
