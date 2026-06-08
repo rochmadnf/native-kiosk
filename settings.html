@@ -1,175 +1,251 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Kioks Kamonji - Native</title>
+    <title>Kioks Kamonji - Settings</title>
+    <link rel="icon" href="https://rochmadnf.my.id/assets/images/favicon.png" />
 
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap"
+      rel="stylesheet"
+    />
+
+    <link href="/assets/css/phosphor.css" rel="stylesheet" type="text/css" />
+
+    <script src="/assets/js/tailwindcss.js"></script>
+    <style type="text/tailwindcss">
+      @theme {
+        --font-sans:
+          "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif,
+          "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
+          "Noto Color Emoji";
+        --font-mono:
+          "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco,
+          Consolas, "Liberation Mono", "Courier New", monospace;
+        --color-brand-old: var(--color-green-700);
+        --color-brand-border: --alpha(var(--color-green-300)/50%);
+        --color-brand-bg: var(--color-green-100);
+      }
+    </style>
   </head>
 
-  <body class="text-gray-900">
-    <main class="h-dvh w-screen flex flex-col items-center justify-center">
-      <!-- Alert container -->
-      <div id="alertContainer" class="mt-4"></div>
+  <body class="text-slate-900 antialiased">
+    <main
+      class="mx-auto my-8 border border-brand-border space-y-8 rounded-md lg:max-w-4xl px-8 pt-8 pb-4 shadow-xs"
+    >
+      <!-- Header -->
+      <header
+        class="flex items-center justify-between border border-brand-border rounded-md py-4 px-6 shadow-xs"
+      >
+        <section aria-label="Logo" class="flex items-center gap-x-2">
+          <div
+            class="inline-flex rounded-md bg-brand-bg items-center justify-center size-12"
+          >
+            <i
+              class="ph ph-hospital text-brand-old text-3xl pointer-events-none"
+            ></i>
+          </div>
+          <div class="-space-y-0.5">
+            <h1 class="text-base font-bold text-brand-old">
+              UPTD. Puskesmas Kamonji
+            </h1>
+            <p class="text-xs text-green-600">Kiosk Pendaftaran Pasien</p>
+          </div>
+        </section>
 
-      <!-- Section 1: Server / Print settings -->
-      <section class="w-full max-w-md p-6 bg-white rounded-lg shadow-md mb-6">
-        <h2 class="text-lg font-semibold mb-4">Server / Print Settings</h2>
+        <a
+          href="./index.html"
+          class="inline-flex items-center gap-x-1.5 py-2 px-3 rounded-md border border-green-500/75 text-brand-old text-sm font-semibold cursor-pointer transition duration-200 hover:bg-brand-bg/75"
+        >
+          <i class="ph ph-arrow-left text-lg pointer-events-none"></i>
+        </a>
+      </header>
 
-        <form id="formServer" class="flex flex-col gap-y-4">
+      <!-- Section 1: Server / Print Settings -->
+      <section
+        class="flex flex-col gap-y-4 border border-brand-border rounded-md py-4 px-6 shadow-xs"
+      >
+        <div class="flex items-center gap-x-2">
+          <div
+            class="inline-flex rounded-md bg-brand-bg items-center justify-center size-8"
+          >
+            <i
+              class="ph ph-wifi-high text-brand-old text-lg pointer-events-none"
+            ></i>
+          </div>
+          <h2 class="font-semibold text-brand-old text-[13px]">
+            Server / Print Settings
+          </h2>
+        </div>
+
+        <form
+          id="formServer"
+          class="space-y-4 border-t border-brand-border pt-4"
+        >
           <div>
-            <label
-              for="ip_server"
-              class="block mb-2 text-sm font-bold text-gray-900"
-              >IP or URL</label
-            >
-            <input
-              type="text"
-              id="ip_server"
-              name="ip_server"
-              placeholder="e.g. 192.168.1.50 or http://printer.local"
-              class="text-center bg-gray-50 border border-gray-300 text-gray-900 text-md tracking-wide font-mono rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-            />
+            <label for="ip_server" class="text-xs text-green-900 font-semibold">
+              IP atau URL Server
+            </label>
+            <div class="relative mt-2 w-full flex items-center">
+              <input
+                type="text"
+                id="ip_server"
+                name="ip_server"
+                placeholder="192.168.1.50 atau http://printer.local"
+                class="inline-flex w-full h-12 text-base text-green-900 font-mono tracking-wider rounded-md py-2 px-4 outline-none border border-brand-border focus:ring-2 focus:ring-green-300 focus:ring-offset-2 placeholder:text-green-900/30"
+              />
+            </div>
           </div>
 
-          <div class="flex gap-2">
+          <div class="flex justify-end">
             <button
-              id="saveServer"
               type="submit"
-              class="flex-1 text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-4 py-2"
+              id="saveServer"
+              class="inline-flex items-center gap-x-1.5 py-2 px-5 rounded-md bg-green-700 text-white text-sm font-semibold cursor-pointer transition duration-200 hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-300 focus:ring-offset-2"
             >
+              <i class="ph ph-floppy-disk text-lg pointer-events-none"></i>
               Simpan
             </button>
-            <!-- <button
-              id="testPrint"
-              type="button"
-              class="flex-1 text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-4 focus:ring-green-300 font-medium rounded-full text-sm px-4 py-2"
-            >
-              Test Print
-            </button> -->
           </div>
         </form>
       </section>
 
-      <!-- Section 2: Account settings -->
-      <section class="w-full max-w-md p-6 bg-white rounded-lg shadow-md">
-        <h2 class="text-lg font-semibold mb-4">
-          Account (username & password)
-        </h2>
+      <!-- Section 2: Account Settings -->
+      <section
+        class="flex flex-col gap-y-4 border border-brand-border rounded-md py-4 px-6 shadow-xs"
+      >
+        <div class="flex items-center gap-x-2">
+          <div
+            class="inline-flex rounded-md bg-brand-bg items-center justify-center size-8"
+          >
+            <i
+              class="ph ph-user-circle text-brand-old text-lg pointer-events-none"
+            ></i>
+          </div>
+          <h2 class="font-semibold text-brand-old text-[13px]">
+            Akun (Username &amp; Password)
+          </h2>
+        </div>
 
-        <form id="formAccount" class="flex flex-col gap-y-4">
+        <form
+          id="formAccount"
+          class="space-y-4 border-t border-brand-border pt-4"
+        >
           <div>
             <label
               for="acct_username"
-              class="block mb-2 text-sm font-bold text-gray-900"
-              >Username</label
+              class="text-xs text-green-900 font-semibold"
             >
-            <input
-              type="text"
-              id="acct_username"
-              name="acct_username"
-              class="text-center bg-gray-50 border border-gray-300 text-gray-900 text-md tracking-wide font-mono rounded-lg block w-full p-2.5"
-            />
+              Username
+            </label>
+            <div class="relative mt-2 w-full flex items-center">
+              <i
+                class="ph ph-user absolute left-3 text-green-900/40 text-lg pointer-events-none"
+              ></i>
+              <input
+                type="text"
+                id="acct_username"
+                name="acct_username"
+                class="inline-flex w-full h-12 text-base text-green-900 font-mono tracking-wider rounded-md py-2 pl-9 pr-4 outline-none border border-brand-border focus:ring-2 focus:ring-green-300 focus:ring-offset-2 placeholder:text-green-900/30"
+              />
+            </div>
           </div>
+
           <div>
             <label
               for="acct_password"
-              class="block mb-2 text-sm font-bold text-gray-900"
-              >Password</label
+              class="text-xs text-green-900 font-semibold"
             >
-            <input
-              type="password"
-              id="acct_password"
-              name="acct_password"
-              class="text-center bg-gray-50 border border-gray-300 text-gray-900 text-md tracking-wide font-mono rounded-lg block w-full p-2.5"
-            />
+              Password
+            </label>
+            <div class="relative mt-2 w-full flex items-center">
+              <i
+                class="ph ph-lock-simple absolute left-3 text-green-900/40 text-lg pointer-events-none"
+              ></i>
+              <input
+                type="password"
+                id="acct_password"
+                name="acct_password"
+                class="inline-flex w-full h-12 text-base text-green-900 font-mono tracking-wider rounded-md py-2 pl-9 pr-4 outline-none border border-brand-border focus:ring-2 focus:ring-green-300 focus:ring-offset-2 placeholder:text-green-900/30"
+              />
+            </div>
           </div>
 
-          <div class="flex gap-2 items-center">
-            <a
-              href="./index.html"
-              id="backHome"
-              class="text-white bg-gray-700 hover:bg-gray-800 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-full text-sm px-4 py-2"
-              >Kembali</a
-            >
+          <div class="flex justify-end">
             <button
-              id="saveAccount"
               type="submit"
-              class="flex-1 text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-4 py-2"
+              id="saveAccount"
+              class="inline-flex items-center gap-x-1.5 py-2 px-5 rounded-md bg-green-700 text-white text-sm font-semibold cursor-pointer transition duration-200 hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-300 focus:ring-offset-2"
             >
-              Simpan Akun
+              <i class="ph ph-floppy-disk text-lg pointer-events-none"></i>
+              Simpan
             </button>
           </div>
         </form>
       </section>
+
+      <!-- Alert -->
+      <div id="alertContainer"></div>
+
+      <!-- Footer -->
+      <p class="text-xs text-slate-600 text-center">
+        Made with ❤️ by
+        <a
+          href="https://instagram.com/rochmadnf"
+          target="_blank"
+          class="text-brand-old hover:underline"
+          >Rochmad Nurul Fahmi</a
+        >
+      </p>
     </main>
 
     <script>
-      // Elements
       const formServer = document.getElementById("formServer");
       const ipInput = document.getElementById("ip_server");
-      const testPrintBtn = document.getElementById("testPrint");
       const formAccount = document.getElementById("formAccount");
       const acctUser = document.getElementById("acct_username");
       const acctPass = document.getElementById("acct_password");
+      const alertBox = document.getElementById("alertContainer");
 
-      // Load saved values on page load
+      function showAlert(message, type = "success") {
+        const isSuccess = type === "success";
+        alertBox.innerHTML = `
+          <div class="flex items-center gap-x-2 border rounded-md py-3 px-4 text-sm font-semibold shadow-xs
+            ${
+              isSuccess
+                ? "border-green-300/50 bg-green-50 text-green-800"
+                : "border-red-300/50 bg-red-50 text-red-800"
+            }">
+            <i class="ph ${isSuccess ? "ph-check-circle" : "ph-warning-circle"} text-lg pointer-events-none"></i>
+            ${message}
+          </div>`;
+        setTimeout(() => (alertBox.innerHTML = ""), 3000);
+      }
+
+      // Load saved values
       window.addEventListener("load", () => {
-        const savedIp = localStorage.getItem("ip_server") || "";
-        const savedUser = localStorage.getItem("acct_username") || "";
-        const savedPass = localStorage.getItem("acct_password") || "";
-
-        if (ipInput) ipInput.value = savedIp;
-        if (acctUser) acctUser.value = savedUser;
-        if (acctPass) acctPass.value = savedPass;
+        ipInput.value = localStorage.getItem("ip_server") || "";
+        acctUser.value = localStorage.getItem("acct_username") || "";
+        acctPass.value = localStorage.getItem("acct_password") || "";
       });
 
       // Save server settings
-      if (formServer) {
-        formServer.addEventListener("submit", (e) => {
-          e.preventDefault();
-          const value = ipInput.value.trim();
-          localStorage.setItem("ip_server", value);
-          alert("Pengaturan server disimpan.");
-        });
-      }
-
-      // Test Print button: construct URL and open in new tab
-      if (testPrintBtn) {
-        testPrintBtn.addEventListener("click", () => {
-          const ip = (ipInput && ipInput.value.trim()) || "";
-          if (!ip) {
-            alert("Masukkan IP atau URL server terlebih dahulu.");
-            return;
-          }
-
-          // If user didn't provide protocol, assume http
-          const hasProtocol = /^https?:\/\//i.test(ip);
-          const base = hasProtocol
-            ? ip.replace(/\/*$/, "")
-            : "http://" + ip.replace(/\/*$/, "");
-          const printUrl = base + "/api/print-struk";
-
-          // Offer to open the URL in a new tab/window
-          const open = confirm("Open print URL in a new tab?\n" + printUrl);
-          if (open) {
-            window.open(printUrl, "_blank", "noopener");
-          }
-        });
-      }
+      formServer.addEventListener("submit", (e) => {
+        e.preventDefault();
+        localStorage.setItem("ip_server", ipInput.value.trim());
+        showAlert("Pengaturan server berhasil disimpan.");
+      });
 
       // Save account settings
-      if (formAccount) {
-        formAccount.addEventListener("submit", (e) => {
-          e.preventDefault();
-          const user = acctUser.value.trim();
-          const pass = acctPass.value;
-          localStorage.setItem("acct_username", user);
-          localStorage.setItem("acct_password", pass);
-          alert("Akun disimpan.");
-        });
-      }
+      formAccount.addEventListener("submit", (e) => {
+        e.preventDefault();
+        localStorage.setItem("acct_username", acctUser.value.trim());
+        localStorage.setItem("acct_password", acctPass.value);
+        showAlert("Akun berhasil disimpan.");
+      });
     </script>
   </body>
 </html>
