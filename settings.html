@@ -187,6 +187,81 @@
         </form>
       </section>
 
+      <!-- Section 3: Kiosk Secret Code -->
+      <section
+        class="flex flex-col gap-y-4 border border-brand-border rounded-md py-4 px-6 shadow-xs"
+      >
+        <div class="flex items-center gap-x-2">
+          <div
+            class="inline-flex rounded-md bg-brand-bg items-center justify-center size-8"
+          >
+            <i
+              class="ph ph-lock-simple text-brand-old text-lg pointer-events-none"
+            ></i>
+          </div>
+          <h2 class="font-semibold text-brand-old text-[13px]">
+            Kode Rahasia Mode Kiosk
+          </h2>
+        </div>
+
+        <form
+          id="formSecret"
+          class="space-y-4 border-t border-brand-border pt-4"
+        >
+          <div>
+            <label
+              for="secret_code"
+              class="text-xs text-green-900 font-semibold"
+            >
+              Kode Rahasia (6 Digit Angka)
+            </label>
+            <p class="text-xs text-slate-500 mt-0.5 mb-2">
+              Kode ini digunakan untuk keluar dari mode layar penuh kiosk.
+            </p>
+            <div class="relative mt-1 w-full flex items-center">
+              <i
+                class="ph ph-lock-key absolute left-3 text-green-900/40 text-lg pointer-events-none"
+              ></i>
+              <input
+                type="password"
+                id="secret_code"
+                name="secret_code"
+                maxlength="6"
+                inputmode="numeric"
+                pattern="[0-9]{6}"
+                placeholder="••••••"
+                class="inline-flex w-full h-12 text-base text-green-900 font-mono tracking-[0.5em] rounded-md py-2 pl-9 pr-12 outline-none border border-brand-border focus:ring-2 focus:ring-green-300 focus:ring-offset-2 placeholder:text-green-900/30 placeholder:tracking-normal"
+              />
+              <button
+                type="button"
+                id="toggleSecret"
+                class="absolute right-3 text-green-900/40 hover:text-green-900 transition duration-150 cursor-pointer"
+                tabindex="-1"
+              >
+                <i
+                  class="ph ph-eye text-lg pointer-events-none"
+                  id="toggleSecretIcon"
+                ></i>
+              </button>
+            </div>
+            <p class="text-xs text-slate-400 mt-1">
+              Default: <span class="font-mono">233399</span>
+            </p>
+          </div>
+
+          <div class="flex justify-end">
+            <button
+              type="submit"
+              id="saveSecret"
+              class="inline-flex items-center gap-x-1.5 py-2 px-5 rounded-md bg-green-700 text-white text-sm font-semibold cursor-pointer transition duration-200 hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-300 focus:ring-offset-2"
+            >
+              <i class="ph ph-floppy-disk text-lg pointer-events-none"></i>
+              Simpan
+            </button>
+          </div>
+        </form>
+      </section>
+
       <!-- Alert -->
       <div id="alertContainer"></div>
 
@@ -208,6 +283,10 @@
       const formAccount = document.getElementById("formAccount");
       const acctUser = document.getElementById("acct_username");
       const acctPass = document.getElementById("acct_password");
+      const formSecret = document.getElementById("formSecret");
+      const secretCodeInput = document.getElementById("secret_code");
+      const toggleSecretBtn = document.getElementById("toggleSecret");
+      const toggleSecretIcon = document.getElementById("toggleSecretIcon");
       const alertBox = document.getElementById("alertContainer");
 
       function showAlert(message, type = "success") {
@@ -230,6 +309,7 @@
         ipInput.value = localStorage.getItem("ip_server") || "";
         acctUser.value = localStorage.getItem("acct_username") || "";
         acctPass.value = localStorage.getItem("acct_password") || "";
+        secretCodeInput.value = localStorage.getItem("secret_code") || "";
       });
 
       // Save server settings
@@ -245,6 +325,34 @@
         localStorage.setItem("acct_username", acctUser.value.trim());
         localStorage.setItem("acct_password", acctPass.value);
         showAlert("Akun berhasil disimpan.");
+      });
+
+      // Save secret code
+      formSecret.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const code = secretCodeInput.value.trim();
+        if (!/^\d{6}$/.test(code)) {
+          showAlert("Kode rahasia harus tepat 6 digit angka.", "error");
+          return;
+        }
+        localStorage.setItem("secret_code", code);
+        showAlert("Kode rahasia berhasil disimpan.");
+      });
+
+      // Only allow digits in secret code field
+      secretCodeInput.addEventListener("input", () => {
+        secretCodeInput.value = secretCodeInput.value
+          .replace(/\D/g, "")
+          .slice(0, 6);
+      });
+
+      // Toggle show/hide secret code
+      toggleSecretBtn.addEventListener("click", () => {
+        const isPassword = secretCodeInput.type === "password";
+        secretCodeInput.type = isPassword ? "text" : "password";
+        toggleSecretIcon.className = isPassword
+          ? "ph ph-eye-slash text-lg pointer-events-none"
+          : "ph ph-eye text-lg pointer-events-none";
       });
     </script>
   </body>

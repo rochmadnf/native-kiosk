@@ -37,6 +37,241 @@
     </style>
   </head>
 
+  <!-- Secret unlock overlay -->
+  <div
+    id="secretOverlay"
+    class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center animate__animated"
+  >
+    <div
+      class="bg-white rounded-2xl shadow-2xl p-8 w-80 flex flex-col items-center gap-y-5"
+    >
+      <div class="flex flex-col items-center gap-y-1">
+        <div
+          class="inline-flex rounded-full bg-green-100 items-center justify-center size-14 mb-1"
+        >
+          <i
+            class="ph ph-lock-simple text-green-700 text-3xl pointer-events-none"
+          ></i>
+        </div>
+        <h3 class="font-bold text-green-900 text-base">
+          Masukkan Kode Rahasia
+        </h3>
+        <p class="text-xs text-slate-500">
+          Masukkan 6 digit kode untuk keluar dari mode kiosk
+        </p>
+      </div>
+      <!-- Dot indicators -->
+      <div class="flex items-center gap-x-3" id="secretDots">
+        <span
+          class="size-3 rounded-full bg-green-200 transition-colors duration-200"
+          data-dot="0"
+        ></span>
+        <span
+          class="size-3 rounded-full bg-green-200 transition-colors duration-200"
+          data-dot="1"
+        ></span>
+        <span
+          class="size-3 rounded-full bg-green-200 transition-colors duration-200"
+          data-dot="2"
+        ></span>
+        <span
+          class="size-3 rounded-full bg-green-200 transition-colors duration-200"
+          data-dot="3"
+        ></span>
+        <span
+          class="size-3 rounded-full bg-green-200 transition-colors duration-200"
+          data-dot="4"
+        ></span>
+        <span
+          class="size-3 rounded-full bg-green-200 transition-colors duration-200"
+          data-dot="5"
+        ></span>
+      </div>
+      <!-- Secret numpad -->
+      <div class="grid grid-cols-3 gap-2 w-full">
+        <button
+          onclick="secretPad('1')"
+          class="secret-key py-3.5 rounded-xl border border-green-200 font-mono font-semibold text-green-900 text-lg cursor-pointer hover:bg-green-50 active:bg-green-100 transition duration-150"
+        >
+          1
+        </button>
+        <button
+          onclick="secretPad('2')"
+          class="secret-key py-3.5 rounded-xl border border-green-200 font-mono font-semibold text-green-900 text-lg cursor-pointer hover:bg-green-50 active:bg-green-100 transition duration-150"
+        >
+          2
+        </button>
+        <button
+          onclick="secretPad('3')"
+          class="secret-key py-3.5 rounded-xl border border-green-200 font-mono font-semibold text-green-900 text-lg cursor-pointer hover:bg-green-50 active:bg-green-100 transition duration-150"
+        >
+          3
+        </button>
+        <button
+          onclick="secretPad('4')"
+          class="secret-key py-3.5 rounded-xl border border-green-200 font-mono font-semibold text-green-900 text-lg cursor-pointer hover:bg-green-50 active:bg-green-100 transition duration-150"
+        >
+          4
+        </button>
+        <button
+          onclick="secretPad('5')"
+          class="secret-key py-3.5 rounded-xl border border-green-200 font-mono font-semibold text-green-900 text-lg cursor-pointer hover:bg-green-50 active:bg-green-100 transition duration-150"
+        >
+          5
+        </button>
+        <button
+          onclick="secretPad('6')"
+          class="secret-key py-3.5 rounded-xl border border-green-200 font-mono font-semibold text-green-900 text-lg cursor-pointer hover:bg-green-50 active:bg-green-100 transition duration-150"
+        >
+          6
+        </button>
+        <button
+          onclick="secretPad('7')"
+          class="secret-key py-3.5 rounded-xl border border-green-200 font-mono font-semibold text-green-900 text-lg cursor-pointer hover:bg-green-50 active:bg-green-100 transition duration-150"
+        >
+          7
+        </button>
+        <button
+          onclick="secretPad('8')"
+          class="secret-key py-3.5 rounded-xl border border-green-200 font-mono font-semibold text-green-900 text-lg cursor-pointer hover:bg-green-50 active:bg-green-100 transition duration-150"
+        >
+          8
+        </button>
+        <button
+          onclick="secretPad('9')"
+          class="secret-key py-3.5 rounded-xl border border-green-200 font-mono font-semibold text-green-900 text-lg cursor-pointer hover:bg-green-50 active:bg-green-100 transition duration-150"
+        >
+          9
+        </button>
+        <button
+          onclick="secretClear()"
+          class="secret-key py-3.5 rounded-xl border border-red-200 font-mono font-semibold text-red-500 text-sm cursor-pointer hover:bg-red-50 active:bg-red-100 transition duration-150 col-span-1"
+        >
+          <i class="ph ph-eraser pointer-events-none"></i>
+        </button>
+        <button
+          onclick="secretPad('0')"
+          class="secret-key py-3.5 rounded-xl border border-green-200 font-mono font-semibold text-green-900 text-lg cursor-pointer hover:bg-green-50 active:bg-green-100 transition duration-150"
+        >
+          0
+        </button>
+        <button
+          onclick="secretBackspace()"
+          class="secret-key py-3.5 rounded-xl border border-slate-200 font-mono font-semibold text-slate-500 text-sm cursor-pointer hover:bg-slate-50 active:bg-slate-100 transition duration-150"
+        >
+          <i class="ph ph-backspace pointer-events-none"></i>
+        </button>
+      </div>
+      <p id="secretError" class="text-xs text-red-500 font-semibold hidden">
+        Kode salah, coba lagi.
+      </p>
+    </div>
+  </div>
+
+  <!-- Virtual Numpad -->
+  <div
+    id="virtualNumpad"
+    class="hidden fixed inset-0 z-40 flex items-end justify-center pb-6 pointer-events-none"
+  >
+    <div
+      class="pointer-events-auto bg-white rounded-2xl shadow-2xl border border-green-200 p-4 w-80 animate__animated animate__fadeInUp"
+    >
+      <div class="flex items-center justify-between mb-3 px-1">
+        <span class="text-xs font-semibold text-green-800"
+          >Numpad NIK / No. BPJS</span
+        >
+        <button
+          id="closeNumpad"
+          class="text-slate-400 hover:text-slate-600 transition duration-150 cursor-pointer"
+        >
+          <i class="ph ph-x text-lg pointer-events-none"></i>
+        </button>
+      </div>
+      <div class="grid grid-cols-3 gap-2">
+        <button
+          onclick="numpadPress('1')"
+          class="numpad-key py-4 rounded-xl border border-green-200 font-mono font-bold text-green-900 text-2xl cursor-pointer hover:bg-green-50 active:bg-green-100 active:scale-95 transition duration-100"
+        >
+          1
+        </button>
+        <button
+          onclick="numpadPress('2')"
+          class="numpad-key py-4 rounded-xl border border-green-200 font-mono font-bold text-green-900 text-2xl cursor-pointer hover:bg-green-50 active:bg-green-100 active:scale-95 transition duration-100"
+        >
+          2
+        </button>
+        <button
+          onclick="numpadPress('3')"
+          class="numpad-key py-4 rounded-xl border border-green-200 font-mono font-bold text-green-900 text-2xl cursor-pointer hover:bg-green-50 active:bg-green-100 active:scale-95 transition duration-100"
+        >
+          3
+        </button>
+        <button
+          onclick="numpadPress('4')"
+          class="numpad-key py-4 rounded-xl border border-green-200 font-mono font-bold text-green-900 text-2xl cursor-pointer hover:bg-green-50 active:bg-green-100 active:scale-95 transition duration-100"
+        >
+          4
+        </button>
+        <button
+          onclick="numpadPress('5')"
+          class="numpad-key py-4 rounded-xl border border-green-200 font-mono font-bold text-green-900 text-2xl cursor-pointer hover:bg-green-50 active:bg-green-100 active:scale-95 transition duration-100"
+        >
+          5
+        </button>
+        <button
+          onclick="numpadPress('6')"
+          class="numpad-key py-4 rounded-xl border border-green-200 font-mono font-bold text-green-900 text-2xl cursor-pointer hover:bg-green-50 active:bg-green-100 active:scale-95 transition duration-100"
+        >
+          6
+        </button>
+        <button
+          onclick="numpadPress('7')"
+          class="numpad-key py-4 rounded-xl border border-green-200 font-mono font-bold text-green-900 text-2xl cursor-pointer hover:bg-green-50 active:bg-green-100 active:scale-95 transition duration-100"
+        >
+          7
+        </button>
+        <button
+          onclick="numpadPress('8')"
+          class="numpad-key py-4 rounded-xl border border-green-200 font-mono font-bold text-green-900 text-2xl cursor-pointer hover:bg-green-50 active:bg-green-100 active:scale-95 transition duration-100"
+        >
+          8
+        </button>
+        <button
+          onclick="numpadPress('9')"
+          class="numpad-key py-4 rounded-xl border border-green-200 font-mono font-bold text-green-900 text-2xl cursor-pointer hover:bg-green-50 active:bg-green-100 active:scale-95 transition duration-100"
+        >
+          9
+        </button>
+        <button
+          onclick="numpadClear()"
+          class="numpad-key py-4 rounded-xl border border-red-200 font-mono font-bold text-red-500 text-base cursor-pointer hover:bg-red-50 active:bg-red-100 active:scale-95 transition duration-100"
+        >
+          <i class="ph ph-eraser pointer-events-none"></i>
+        </button>
+        <button
+          onclick="numpadPress('0')"
+          class="numpad-key py-4 rounded-xl border border-green-200 font-mono font-bold text-green-900 text-2xl cursor-pointer hover:bg-green-50 active:bg-green-100 active:scale-95 transition duration-100"
+        >
+          0
+        </button>
+        <button
+          onclick="numpadBackspace()"
+          class="numpad-key py-4 rounded-xl border border-slate-200 font-mono font-bold text-slate-500 text-base cursor-pointer hover:bg-slate-50 active:bg-slate-100 active:scale-95 transition duration-100"
+        >
+          <i class="ph ph-backspace pointer-events-none"></i>
+        </button>
+        <!-- Submit full width -->
+        <button
+          onclick="numpadSubmit()"
+          class="col-span-3 py-4 rounded-xl bg-green-700 text-white font-bold text-base cursor-pointer hover:bg-green-800 active:bg-green-900 active:scale-95 transition duration-100 flex items-center justify-center gap-x-2"
+        >
+          <i class="ph ph-magnifying-glass pointer-events-none text-xl"></i>
+          Cari Pasien
+        </button>
+      </div>
+    </div>
+  </div>
+
   <body class="text-slate-900 antiliased">
     <main
       class="overflow-x-hidden mx-auto my-8 border border-brand-border space-y-8 rounded-md lg:max-w-5xl px-8 pt-8 pb-4 shadow-xs"
@@ -62,11 +297,35 @@
             <p class="text-xs text-green-600">Kiosk Pendaftaran Pasien</p>
           </div>
         </section>
+        <div id="headerButtons" class="flex items-center gap-x-2">
+          <button
+            id="btnFullscreen"
+            class="inline-flex items-center p-2 rounded-md border border-green-500/75 cursor-pointer transition duration-200 hover:bg-brand-bg/75"
+            title="Mode Layar Penuh"
+          >
+            <i
+              class="ph ph-arrows-out text-brand-old text-lg pointer-events-none"
+            ></i>
+          </button>
+          <button
+            id="btnSetting"
+            class="inline-flex items-center p-2 rounded-md border border-green-500/75 cursor-pointer transition duration-200 hover:bg-brand-bg/75"
+          >
+            <i
+              class="ph ph-gear text-brand-old text-lg pointer-events-none"
+            ></i>
+          </button>
+        </div>
+        <!-- Shown only in kiosk mode: secret unlock trigger -->
         <button
-          id="btnSetting"
-          class="inline-flex items-center p-2 rounded-md border border-green-500/75 cursor-pointer transition duration-200 hover:bg-brand-bg/75"
+          id="btnUnlock"
+          class="items-center p-2 rounded-md border border-green-200 cursor-pointer transition duration-200 hover:bg-brand-bg/75"
+          style="display: none"
+          title="Buka Kunci"
         >
-          <i class="ph ph-gear text-brand-old text-lg pointer-events-none"></i>
+          <i
+            class="ph ph-arrows-in text-green-400 text-lg pointer-events-none"
+          ></i>
         </button>
       </header>
 
@@ -123,5 +382,178 @@
     </main>
 
     <script src="/lib/app.js" type="module"></script>
+
+    <script>
+      // ─── Numpad Virtual ────────────────────────────────────────────────────
+      const nikInputEl = document.getElementById("nik");
+      const virtualNumpad = document.getElementById("virtualNumpad");
+      const closeNumpadBtn = document.getElementById("closeNumpad");
+
+      function showNumpad() {
+        virtualNumpad.classList.remove("hidden");
+      }
+
+      function hideNumpad() {
+        virtualNumpad.classList.add("hidden");
+      }
+
+      nikInputEl.addEventListener("focus", () => showNumpad());
+
+      closeNumpadBtn.addEventListener("click", () => {
+        hideNumpad();
+        nikInputEl.blur();
+      });
+
+      function numpadPress(digit) {
+        if (nikInputEl.value.length >= 16) return;
+        nikInputEl.value += digit;
+        nikInputEl.dispatchEvent(new Event("input"));
+      }
+
+      function numpadBackspace() {
+        nikInputEl.value = nikInputEl.value.slice(0, -1);
+        nikInputEl.dispatchEvent(new Event("input"));
+      }
+
+      function numpadClear() {
+        nikInputEl.value = "";
+        nikInputEl.dispatchEvent(new Event("input"));
+      }
+
+      function numpadSubmit() {
+        hideNumpad();
+        document
+          .getElementById("patientForm")
+          .dispatchEvent(new Event("submit", { cancelable: true }));
+      }
+
+      // ─── Mode Fullscreen / Kiosk ───────────────────────────────────────────
+      const btnFullscreen = document.getElementById("btnFullscreen");
+      const headerButtons = document.getElementById("headerButtons");
+      const btnUnlock = document.getElementById("btnUnlock");
+      const secretOverlay = document.getElementById("secretOverlay");
+      const secretError = document.getElementById("secretError");
+
+      let kioskMode = false;
+      let secretInput = "";
+
+      function getSecretCode() {
+        return localStorage.getItem("secret_code") || "233399";
+      }
+
+      function enterKiosk() {
+        const el = document.documentElement;
+        if (el.requestFullscreen) el.requestFullscreen();
+        else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+        else if (el.mozRequestFullScreen) el.mozRequestFullScreen();
+
+        kioskMode = true;
+        headerButtons.classList.add("hidden");
+        btnUnlock.style.display = "inline-flex";
+      }
+
+      function exitKiosk() {
+        if (document.exitFullscreen) document.exitFullscreen();
+        else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+        else if (document.mozCancelFullScreen) document.mozCancelFullScreen();
+
+        kioskMode = false;
+        headerButtons.classList.remove("hidden");
+        btnUnlock.style.display = "none";
+      }
+
+      btnFullscreen.addEventListener("click", () => enterKiosk());
+
+      btnUnlock.addEventListener("click", () => {
+        secretInput = "";
+        updateSecretDots();
+        secretError.classList.add("hidden");
+        secretOverlay.classList.remove("hidden", "animate__fadeOut");
+        secretOverlay.classList.add("animate__fadeIn");
+      });
+
+      function closeSecretOverlay() {
+        secretOverlay.classList.remove("animate__fadeIn");
+        secretOverlay.classList.add("animate__fadeOut");
+        secretOverlay.addEventListener(
+          "animationend",
+          () => {
+            secretOverlay.classList.add("hidden");
+          },
+          { once: true },
+        );
+      }
+
+      function updateSecretDots() {
+        const dots = document.querySelectorAll("[data-dot]");
+        dots.forEach((dot, i) => {
+          if (i < secretInput.length) {
+            dot.classList.remove("bg-green-200");
+            dot.classList.add("bg-green-600");
+          } else {
+            dot.classList.remove("bg-green-600");
+            dot.classList.add("bg-green-200");
+          }
+        });
+      }
+
+      function secretPad(digit) {
+        if (secretInput.length >= 6) return;
+        secretInput += digit;
+        updateSecretDots();
+
+        if (secretInput.length === 6) {
+          setTimeout(() => {
+            if (secretInput === getSecretCode()) {
+              closeSecretOverlay();
+              exitKiosk();
+              secretInput = "";
+              updateSecretDots();
+            } else {
+              secretError.classList.remove("hidden");
+              const dots = document.getElementById("secretDots");
+              dots.classList.add("animate__headShake");
+              dots.addEventListener(
+                "animationend",
+                () => {
+                  dots.classList.remove("animate__headShake");
+                },
+                { once: true },
+              );
+              secretInput = "";
+              updateSecretDots();
+            }
+          }, 200);
+        }
+      }
+
+      function secretBackspace() {
+        secretInput = secretInput.slice(0, -1);
+        secretError.classList.add("hidden");
+        updateSecretDots();
+      }
+
+      function secretClear() {
+        secretInput = "";
+        secretError.classList.add("hidden");
+        updateSecretDots();
+      }
+
+      secretOverlay.addEventListener("click", (e) => {
+        if (e.target === secretOverlay) {
+          closeSecretOverlay();
+          secretInput = "";
+          updateSecretDots();
+        }
+      });
+
+      // Cegah user kabur lewat Esc saat kiosk mode
+      document.addEventListener("fullscreenchange", () => {
+        if (!document.fullscreenElement && kioskMode) {
+          document.documentElement.requestFullscreen &&
+            document.documentElement.requestFullscreen();
+        }
+      });
+    </script>
   </body>
 </html>
