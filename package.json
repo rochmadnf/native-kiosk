@@ -1,0 +1,25 @@
+{
+  "name": "native-kiosk",
+  "version": "1.0.0",
+  "description": "",
+  "main": "lib/app.js",
+  "scripts": {
+    "start": "node server.js",
+    "composer:install": "cd print-struck && composer install && cd .."
+  },
+  "keywords": [],
+  "author": {
+    "name": "Rochmad Nurul Fahmi",
+    "email": "rochmadnf@gmail.com",
+    "url": "https://github.com/rochmadnf"
+  },
+  "license": "ISC",
+  "devEngines": {
+    "packageManager": {
+      "name": "pnpm",
+      "version": "^11.5.1",
+      "onFail": "download"
+    }
+  },
+  "type": "module"
+}
