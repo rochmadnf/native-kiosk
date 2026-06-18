@@ -64,6 +64,9 @@
         </a>
       </header>
 
+      <!-- Alert (dipindah ke atas, tepat setelah header) -->
+      <div id="alertContainer"></div>
+
       <!-- Section 1: Server / Print Settings -->
       <section
         class="flex flex-col gap-y-4 border border-brand-border rounded-md py-4 px-6 shadow-xs"
@@ -187,7 +190,100 @@
         </form>
       </section>
 
-      <!-- Section 3: Kiosk Secret Code -->
+      <!-- Section 3: BPJS Antrean -->
+      <section
+        class="flex flex-col gap-y-4 border border-brand-border rounded-md py-4 px-6 shadow-xs"
+      >
+        <div class="flex items-center gap-x-2">
+          <div
+            class="inline-flex rounded-md bg-brand-bg items-center justify-center size-8"
+          >
+            <i
+              class="ph ph-shield-check text-brand-old text-lg pointer-events-none"
+            ></i>
+          </div>
+          <h2 class="font-semibold text-brand-old text-[13px]">
+            BPJS Antrean — Token &amp; Cookie
+          </h2>
+        </div>
+
+        <form id="formBPJS" class="space-y-4 border-t border-brand-border pt-4">
+          <!-- Token BPJS -->
+          <div>
+            <label
+              for="token_bpjs_antrean"
+              class="text-xs text-green-900 font-semibold"
+            >
+              Token BPJS Antrean
+            </label>
+            <p class="text-xs text-slate-500 mt-0.5 mb-2">
+              Bearer token untuk autentikasi ke API BPJS Antrean.
+            </p>
+            <div class="relative mt-1 w-full flex items-center">
+              <i
+                class="ph ph-key absolute left-3 text-green-900/40 text-lg pointer-events-none"
+              ></i>
+              <input
+                type="password"
+                id="token_bpjs_antrean"
+                name="token_bpjs_antrean"
+                placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                class="inline-flex w-full h-12 text-base text-green-900 font-mono tracking-wider rounded-md py-2 pl-9 pr-12 outline-none border border-brand-border focus:ring-2 focus:ring-green-300 focus:ring-offset-2 placeholder:text-green-900/30 placeholder:tracking-normal"
+              />
+              <button
+                type="button"
+                id="toggleToken"
+                class="absolute right-3 text-green-900/40 hover:text-green-900 transition duration-150 cursor-pointer"
+                tabindex="-1"
+              >
+                <i
+                  class="ph ph-eye text-lg pointer-events-none"
+                  id="toggleTokenIcon"
+                ></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Cookie Header BPJS -->
+          <div>
+            <label
+              for="cookie_header_bpjs_antrean"
+              class="text-xs text-green-900 font-semibold"
+            >
+              Cookie Header BPJS Antrean
+            </label>
+            <p class="text-xs text-slate-500 mt-0.5 mb-2">
+              Nilai header Cookie yang digunakan saat request ke API BPJS
+              Antrean.
+            </p>
+            <div class="relative mt-1 w-full flex items-center">
+              <i
+                class="ph ph-cookie absolute left-3 top-3 text-green-900/40 text-lg pointer-events-none"
+              ></i>
+              <textarea
+                id="cookie_header_bpjs_antrean"
+                name="cookie_header_bpjs_antrean"
+                rows="3"
+                placeholder="session=abc123; token=xyz..."
+                class="inline-flex w-full text-base text-green-900 font-mono tracking-wider rounded-md py-2 pl-9 pr-4 outline-none border border-brand-border focus:ring-2 focus:ring-green-300 focus:ring-offset-2 placeholder:text-green-900/30 placeholder:tracking-normal resize-none"
+              ></textarea>
+            </div>
+          </div>
+
+          <div class="flex justify-end">
+            <button
+              type="submit"
+              id="saveBPJS"
+              class="inline-flex items-center gap-x-1.5 py-2 px-5 rounded-md bg-green-700 text-white text-sm font-semibold cursor-pointer transition duration-200 hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-300 focus:ring-offset-2"
+            >
+              <i class="ph ph-floppy-disk text-lg pointer-events-none"></i>
+              Simpan
+            </button>
+          </div>
+        </form>
+      </section>
+
+      <!-- Section 4: Kiosk Secret Code -->
       <section
         class="flex flex-col gap-y-4 border border-brand-border rounded-md py-4 px-6 shadow-xs"
       >
@@ -262,9 +358,6 @@
         </form>
       </section>
 
-      <!-- Alert -->
-      <div id="alertContainer"></div>
-
       <!-- Footer -->
       <p class="text-xs text-slate-600 text-center">
         Made with ❤️ by
@@ -283,10 +376,15 @@
       const formAccount = document.getElementById("formAccount");
       const acctUser = document.getElementById("acct_username");
       const acctPass = document.getElementById("acct_password");
+      const formBPJS = document.getElementById("formBPJS");
+      const tokenBPJS = document.getElementById("token_bpjs_antrean");
+      const cookieBPJS = document.getElementById("cookie_header_bpjs_antrean");
       const formSecret = document.getElementById("formSecret");
       const secretCodeInput = document.getElementById("secret_code");
       const toggleSecretBtn = document.getElementById("toggleSecret");
       const toggleSecretIcon = document.getElementById("toggleSecretIcon");
+      const toggleTokenBtn = document.getElementById("toggleToken");
+      const toggleTokenIcon = document.getElementById("toggleTokenIcon");
       const alertBox = document.getElementById("alertContainer");
 
       function showAlert(message, type = "success") {
@@ -301,7 +399,8 @@
             <i class="ph ${isSuccess ? "ph-check-circle" : "ph-warning-circle"} text-lg pointer-events-none"></i>
             ${message}
           </div>`;
-        setTimeout(() => (alertBox.innerHTML = ""), 3000);
+        alertBox.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        setTimeout(() => (alertBox.innerHTML = ""), 3500);
       }
 
       // Load saved values
@@ -309,6 +408,9 @@
         ipInput.value = localStorage.getItem("ip_server") || "";
         acctUser.value = localStorage.getItem("acct_username") || "";
         acctPass.value = localStorage.getItem("acct_password") || "";
+        tokenBPJS.value = localStorage.getItem("token_bpjs_antrean") || "";
+        cookieBPJS.value =
+          localStorage.getItem("cookie_header_bpjs_antrean") || "";
         secretCodeInput.value = localStorage.getItem("secret_code") || "";
       });
 
@@ -325,6 +427,17 @@
         localStorage.setItem("acct_username", acctUser.value.trim());
         localStorage.setItem("acct_password", acctPass.value);
         showAlert("Akun berhasil disimpan.");
+      });
+
+      // Save BPJS settings
+      formBPJS.addEventListener("submit", (e) => {
+        e.preventDefault();
+        localStorage.setItem("token_bpjs_antrean", tokenBPJS.value.trim());
+        localStorage.setItem(
+          "cookie_header_bpjs_antrean",
+          cookieBPJS.value.trim(),
+        );
+        showAlert("Pengaturan BPJS Antrean berhasil disimpan.");
       });
 
       // Save secret code
@@ -351,6 +464,15 @@
         const isPassword = secretCodeInput.type === "password";
         secretCodeInput.type = isPassword ? "text" : "password";
         toggleSecretIcon.className = isPassword
+          ? "ph ph-eye-slash text-lg pointer-events-none"
+          : "ph ph-eye text-lg pointer-events-none";
+      });
+
+      // Toggle show/hide token BPJS
+      toggleTokenBtn.addEventListener("click", () => {
+        const isPassword = tokenBPJS.type === "password";
+        tokenBPJS.type = isPassword ? "text" : "password";
+        toggleTokenIcon.className = isPassword
           ? "ph ph-eye-slash text-lg pointer-events-none"
           : "ph ph-eye text-lg pointer-events-none";
       });
