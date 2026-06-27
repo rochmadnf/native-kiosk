@@ -5,7 +5,8 @@
   "main": "lib/app.js",
   "scripts": {
     "start": "node server.js",
-    "composer:install": "cd print-struck && composer install && cd .."
+    "composer:install": "cd print-struck && composer install && cd ..",
+    "print:serve": "cd print-struct && php -S 0.0.0.0:8082"
   },
   "keywords": [],
   "author": {

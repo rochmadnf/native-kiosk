@@ -1,7 +1,13 @@
 <?php
 header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Methods: POST");
+header("Access-Control-Allow-Methods: POST, OPTIONS");
 header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
+header('Content-Type: application/json');
+
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit;
+}
 
 require __DIR__ . '/vendor/autoload.php';
 
@@ -144,4 +150,4 @@ class StrukPrinter
 }
 
 $pos = new StrukPrinter();
-$pos->printStruk();
+echo json_encode($pos->printStruk());
