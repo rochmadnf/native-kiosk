@@ -7,7 +7,7 @@ require __DIR__ . '/vendor/autoload.php';
 
 use Mike42\Escpos\Printer;
 use Mike42\Escpos\EscposImage;
-use Mike42\Escpos\PrintConnectors\NetworkPrintConnector;
+use Mike42\Escpos\PrintConnectors\CupsPrintConnector;
 use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
 
 class StrukPrinter
@@ -66,7 +66,11 @@ class StrukPrinter
 
         try {
 
-            $connector = new WindowsPrintConnector($nama_printer);
+            if (PHP_OS_FAMILY === 'Linux') {
+                $connector = new CupsPrintConnector($nama_printer);
+            } else {
+                $connector = new WindowsPrintConnector($nama_printer);
+            }
             if (!$connector) {
                 throw new Exception("Jenis koneksi tidak valid atau parameter kurang.");
             }
