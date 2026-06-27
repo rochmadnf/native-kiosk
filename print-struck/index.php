@@ -51,7 +51,6 @@ class StrukPrinter
 
         $formatData = json_decode(file_get_contents('php://input'), true);
 
-
         if (!isset($formatData['from'])) {
             $formatData = [...$formatData, ...$from];
         } else {
@@ -128,6 +127,20 @@ class StrukPrinter
             $printer->text("Perkiraan Dilayani : " . $dilayani . ".\n");
             $printer->setEmphasis(false);
             $printer->feed(2);
+
+
+            if (isset($formatData['self_service'])) {
+                if (!$formatData['self_service']['status_bpjs'] || !$formatData['self_service']['faskes_match']) {
+                    $printer->selectPrintMode(Printer::MODE_DOUBLE_WIDTH);
+                    $printer->setTextSize(2, 2);
+                    $printer->setEmphasis(true);
+                    $printer->text("UMUM\n");
+                    $printer->setEmphasis(false);
+                    $printer->selectPrintMode();
+                    $printer->text("Faskes " . $formatData['self_service']['faskes_name'] . ($formatData['self_service']['status_bpjs'] ? "" : "(Tidak Aktif)") . "\n");
+                    $printer->feed(2);
+                }
+            }
 
 
             $printer->setJustification(Printer::JUSTIFY_CENTER);
