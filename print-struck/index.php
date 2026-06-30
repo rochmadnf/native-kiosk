@@ -10,6 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 
 require __DIR__ . '/vendor/autoload.php';
+require __DIR__ . '/config.php';
 
 use Mike42\Escpos\Printer;
 use Mike42\Escpos\EscposImage;
@@ -18,6 +19,12 @@ use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
 
 class StrukPrinter
 {
+    protected string $printerName = "";
+
+    public function __construct(string $printerName)
+    {
+        $this->printerName = $printerName;
+    }
     public function formatHari(string $date)
     {
         $parts = explode('-', $date);
@@ -45,8 +52,6 @@ class StrukPrinter
 
     public function printStruk()
     {
-
-
         $from = ['from' => null, 'patient' => null, 'no_urut' => null];
 
         $formatData = json_decode(file_get_contents('php://input'), true);
@@ -67,14 +72,12 @@ class StrukPrinter
         $patient = $formatData['patient'];
         $noUrut = $formatData['no_urut'];
 
-        $nama_printer = 'smb://localhost/POS-80C';
-
         try {
 
             if (PHP_OS_FAMILY === 'Linux') {
-                $connector = new CupsPrintConnector($nama_printer);
+                $connector = new CupsPrintConnector($this->printerName);
             } else {
-                $connector = new WindowsPrintConnector($nama_printer);
+                $connector = new WindowsPrintConnector($this->printerName);
             }
             if (!$connector) {
                 throw new Exception("Jenis koneksi tidak valid atau parameter kurang.");
@@ -162,5 +165,5 @@ class StrukPrinter
     }
 }
 
-$pos = new StrukPrinter();
+$pos = new StrukPrinter($printerName);
 echo json_encode($pos->printStruk());
