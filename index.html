@@ -189,22 +189,22 @@
       </div>
       <div class="grid grid-cols-3 gap-2">
         <button
-          onclick="numpadPress('7')"
+          onclick="numpadPress('1')"
           class="numpad-key py-4 rounded-xl border border-green-200 font-mono font-bold text-green-900 text-2xl cursor-pointer hover:bg-green-50 active:bg-green-100 active:scale-95 transition duration-100"
         >
-          7
+          1
         </button>
         <button
-          onclick="numpadPress('8')"
+          onclick="numpadPress('2')"
           class="numpad-key py-4 rounded-xl border border-green-200 font-mono font-bold text-green-900 text-2xl cursor-pointer hover:bg-green-50 active:bg-green-100 active:scale-95 transition duration-100"
         >
-          8
+          2
         </button>
         <button
-          onclick="numpadPress('9')"
+          onclick="numpadPress('3')"
           class="numpad-key py-4 rounded-xl border border-green-200 font-mono font-bold text-green-900 text-2xl cursor-pointer hover:bg-green-50 active:bg-green-100 active:scale-95 transition duration-100"
         >
-          9
+          3
         </button>
         <button
           onclick="numpadPress('4')"
@@ -225,22 +225,22 @@
           6
         </button>
         <button
-          onclick="numpadPress('1')"
+          onclick="numpadPress('7')"
           class="numpad-key py-4 rounded-xl border border-green-200 font-mono font-bold text-green-900 text-2xl cursor-pointer hover:bg-green-50 active:bg-green-100 active:scale-95 transition duration-100"
         >
-          1
+          7
         </button>
         <button
-          onclick="numpadPress('2')"
+          onclick="numpadPress('8')"
           class="numpad-key py-4 rounded-xl border border-green-200 font-mono font-bold text-green-900 text-2xl cursor-pointer hover:bg-green-50 active:bg-green-100 active:scale-95 transition duration-100"
         >
-          2
+          8
         </button>
         <button
-          onclick="numpadPress('3')"
+          onclick="numpadPress('9')"
           class="numpad-key py-4 rounded-xl border border-green-200 font-mono font-bold text-green-900 text-2xl cursor-pointer hover:bg-green-50 active:bg-green-100 active:scale-95 transition duration-100"
         >
-          3
+          9
         </button>
         <button
           onclick="numpadClear()"
@@ -404,6 +404,12 @@
         nikInputEl.blur();
       });
 
+      // Tutup numpad kapan pun form NIK di-submit (tombol Cari, tekan Enter,
+      // atau lewat tombol "submit" di numpad itu sendiri)
+      document.getElementById("patientForm").addEventListener("submit", () => {
+        hideNumpad();
+      });
+
       function numpadPress(digit) {
         if (nikInputEl.value.length >= 16) return;
         nikInputEl.value += digit;
@@ -421,7 +427,6 @@
       }
 
       function numpadSubmit() {
-        hideNumpad();
         document
           .getElementById("patientForm")
           .dispatchEvent(new Event("submit", { cancelable: true }));
