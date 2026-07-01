@@ -272,6 +272,29 @@
     </div>
   </div>
 
+  <!-- Access closed overlay (di luar jam layanan) -->
+  <div
+    id="accessClosedOverlay"
+    class="hidden fixed inset-0 z-[9999] bg-white flex items-center justify-center animate__animated"
+  >
+    <div class="flex flex-col items-center gap-y-4 px-8 text-center max-w-md">
+      <div
+        class="inline-flex rounded-full bg-red-100 items-center justify-center size-16"
+      >
+        <i
+          class="ph ph-clock-countdown text-red-600 text-4xl pointer-events-none"
+        ></i>
+      </div>
+      <h3 class="font-bold text-red-500 text-lg">Pendaftaran Online Ditutup</h3>
+      <p class="text-base text-slate-900 leading-8 tracking-wide">
+        Pendaftaran mandiri melalui box antrean ini hanya melayani hingga pukul
+        <strong class="text-red-500">10:30 WITA</strong>. Silakan mendaftar
+        langsung melalui petugas resepsionis.
+      </p>
+      <p class="text-sm text-green-900 font-mono" id="accessClosedClock"></p>
+    </div>
+  </div>
+
   <body class="text-slate-900 antiliased">
     <main
       class="overflow-x-hidden mx-auto my-8 border border-brand-border space-y-8 rounded-md lg:max-w-5xl px-8 pt-8 pb-4 shadow-xs"
@@ -570,6 +593,64 @@
             document.documentElement.requestFullscreen();
         }
       });
+
+      // ─── Batas Waktu Akses (tutup otomatis jam 10:30 WITA) ─────────────────
+      const ACCESS_CLOSE_HOUR = 11;
+      const ACCESS_CLOSE_MINUTE = 30;
+      const ACCESS_TIMEZONE = "Asia/Makassar";
+
+      const accessClosedOverlay = document.getElementById(
+        "accessClosedOverlay",
+      );
+      const accessClosedClock = document.getElementById("accessClosedClock");
+
+      function getMakassarParts() {
+        const parts = new Intl.DateTimeFormat("en-GB", {
+          timeZone: ACCESS_TIMEZONE,
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+          hour12: false,
+        }).formatToParts(new Date());
+
+        const map = {};
+        parts.forEach(({ type, value }) => (map[type] = value));
+
+        return {
+          hour: Number(map.hour),
+          minute: Number(map.minute),
+          second: Number(map.second),
+        };
+      }
+
+      function isPastAccessCutoff() {
+        const { hour, minute } = getMakassarParts();
+        return (
+          hour > ACCESS_CLOSE_HOUR ||
+          (hour === ACCESS_CLOSE_HOUR && minute >= ACCESS_CLOSE_MINUTE)
+        );
+      }
+
+      function lockAccess() {
+        accessClosedOverlay.classList.remove("hidden");
+        // Hentikan interaksi ke konten di belakangnya
+        document.body.style.overflow = "hidden";
+      }
+
+      function checkAccessWindow() {
+        const { hour, minute, second } = getMakassarParts();
+        accessClosedClock.textContent = `Waktu saat ini: ${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}:${String(second).padStart(2, "0")} WITA`;
+
+        if (isPastAccessCutoff()) {
+          lockAccess();
+        }
+      }
+
+      // Cek langsung saat halaman dimuat, lalu terus dipantau tiap detik
+      // supaya kiosk yang sudah terbuka sejak sebelum jam 10:30 tetap terkunci
+      // begitu waktunya tiba.
+      checkAccessWindow();
+      setInterval(checkAccessWindow, 1000);
     </script>
   </body>
 </html>
