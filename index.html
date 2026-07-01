@@ -189,22 +189,22 @@
       </div>
       <div class="grid grid-cols-3 gap-2">
         <button
-          onclick="numpadPress('1')"
+          onclick="numpadPress('7')"
           class="numpad-key py-4 rounded-xl border border-green-200 font-mono font-bold text-green-900 text-2xl cursor-pointer hover:bg-green-50 active:bg-green-100 active:scale-95 transition duration-100"
         >
-          1
+          7
         </button>
         <button
-          onclick="numpadPress('2')"
+          onclick="numpadPress('8')"
           class="numpad-key py-4 rounded-xl border border-green-200 font-mono font-bold text-green-900 text-2xl cursor-pointer hover:bg-green-50 active:bg-green-100 active:scale-95 transition duration-100"
         >
-          2
+          8
         </button>
         <button
-          onclick="numpadPress('3')"
+          onclick="numpadPress('9')"
           class="numpad-key py-4 rounded-xl border border-green-200 font-mono font-bold text-green-900 text-2xl cursor-pointer hover:bg-green-50 active:bg-green-100 active:scale-95 transition duration-100"
         >
-          3
+          9
         </button>
         <button
           onclick="numpadPress('4')"
@@ -225,22 +225,22 @@
           6
         </button>
         <button
-          onclick="numpadPress('7')"
+          onclick="numpadPress('1')"
           class="numpad-key py-4 rounded-xl border border-green-200 font-mono font-bold text-green-900 text-2xl cursor-pointer hover:bg-green-50 active:bg-green-100 active:scale-95 transition duration-100"
         >
-          7
+          1
         </button>
         <button
-          onclick="numpadPress('8')"
+          onclick="numpadPress('2')"
           class="numpad-key py-4 rounded-xl border border-green-200 font-mono font-bold text-green-900 text-2xl cursor-pointer hover:bg-green-50 active:bg-green-100 active:scale-95 transition duration-100"
         >
-          8
+          2
         </button>
         <button
-          onclick="numpadPress('9')"
+          onclick="numpadPress('3')"
           class="numpad-key py-4 rounded-xl border border-green-200 font-mono font-bold text-green-900 text-2xl cursor-pointer hover:bg-green-50 active:bg-green-100 active:scale-95 transition duration-100"
         >
-          9
+          3
         </button>
         <button
           onclick="numpadClear()"
@@ -442,6 +442,7 @@
       }
 
       function enterKiosk() {
+        window.localStorage.setItem("kiosk_mode", "yes");
         const el = document.documentElement;
         if (el.requestFullscreen) el.requestFullscreen();
         else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
@@ -452,7 +453,17 @@
         btnUnlock.style.display = "inline-flex";
       }
 
+      window.addEventListener("DOMContentLoaded", async () => {
+        const fullScreen =
+          window.localStorage.getItem("kiosk_mode") === "yes" ? true : false;
+
+        if (fullScreen) {
+          await enterKiosk();
+        }
+      });
+
       function exitKiosk() {
+        window.localStorage.setItem("kiosk_mode", "no");
         if (document.exitFullscreen) document.exitFullscreen();
         else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
         else if (document.mozCancelFullScreen) document.mozCancelFullScreen();
